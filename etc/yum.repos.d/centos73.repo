@@ -1,0 +1,5 @@
+[centos73]
+name=CentOS 7.3 Repository
+baseurl=file:///u01/centos73/Packages/
+enabled=1
+gpgcheck=0
