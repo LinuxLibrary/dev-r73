@@ -1,0 +1,5 @@
+[rpmfind]
+name=RPM-Find CentOS 7.3.1611 Repository
+baseurl=ftp://fr.rpmfind.net/linux/centos/7.3.1611/os/x86_64/Packages/
+enabled=0
+gpgcheck=0
