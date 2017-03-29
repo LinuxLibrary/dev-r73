@@ -1,0 +1,247 @@
+#-------------------------------------------------------------------------
+# NcFTPd 2.8.7 domain-specific configuration file.
+# Blank lines and lines starting with a `#' character are ignored.
+#
+# This is one of two types of configuration files for use with NcFTPd.
+# Options that are apply to the entire server, including all virtual
+# hosts/domains are not in this file, but in the general configuration file.
+#
+# Not all configuration options are listed here; consult the online
+# documentation at http://www.ncftp.com/ncftpd/doc/ for more.
+#
+# You need a configuration set for each domain.  If you have multiple domains,
+# you can put additional configuration sets in this file, or specify a separate
+# file for each set.  A new configuration set starts with each instance
+# of the `set-name' variable.
+#
+# Most sites are single-homed and will only have one general configuration
+# file and one domain configuration file with one domain configuration set
+# in it.  Multi-homed sites will have one general configuration file and
+# several domain configuration sets, in one or more domain files.
+#
+# Note that if you forget to make a domain configuration set for one of
+# your domains, the server defaults to the first domain given.
+#
+# You can add or change domains in this file and have the changes take
+# effect for new connections by sending the main NcFTPd process a
+# SIGHUP (kill -1) signal.
+#-------------------------------------------------------------------------
+
+
+# The `set-name' variable is used only for reference only.  Usually
+# you will want to put in the fully-qualifed name (i.e. cse.unl.edu)
+# here.  This is just the `name' of this particular domain's
+# configuration set.
+#
+# Also, for the other variables, you can use @SETNAME@ in a setting
+# and have it replaced with the value you put for `set-name.'
+#
+set-name=dev-r73.linux-library.com
+
+
+
+# Set the `server-address' variable to the IP address for this domain.
+# When an incoming connection arrives, this domain's configuration is
+# used if the IP address of the connection matches what you put here.
+# If the IP address does not match any of your configurations, the
+# server uses the first configuration as the default.
+#
+# You may also use the fully-qualifed name (i.e. cse.unl.edu), as long
+# as this name will return the IP address when querying the nameserver
+# or hosts file.
+#
+# Make sure each domain configuration uses a different value
+# for server-address!
+#
+server-address=192.168.1.110
+
+
+
+# You can also associate a hostname with that IP address.  This name
+# is used when the server wants to print it's hostname to the user,
+# such as when the "220 ftp.example.com FTP server ready..." line is printed.
+#
+# You can just leave this commented out most of the time, since it will
+# look up a name based off of `server-address' by default.
+#
+#server-name=dev-r73.linux-library.com
+
+
+
+# If you need both anonymous service and user/password logons you can set
+# `server-type' to `all-users'.  You may want certain domains to offer
+# only anonymous service, in which you would set `server-type' to
+# `anonymous-only'.  Similarly, you may want only non-anonymous access,
+# and use `non-anonymous-only' here.
+#
+server-type=all-users
+
+
+
+# Set the `ftp-home' variable to the pathname of the anonymous FTP
+# hierarchy.  You may leave this commented out if you plan to use the
+# home directory of the `ftp' user, which is the default anyway.  Also
+# leave this commented if you used `non-anonymous-only' for `server-type'.
+# 
+# It can be different for each domain if you like;  it can also be the same
+# for more than one domain.
+#
+#ftp-home=/var/ftp
+
+
+
+# Specify a list of password databases to use to authenticate users
+# for this domain.  This is a comma-delimited list of NcFTPd password
+# databases and/or the /etc/passwd file.  Password databases are special
+# files created by the ncftpd_passwd utility program, and can be used
+# to create virtual users which do not really exist on the system, but
+# are allowed to login and use FTP as if they did.
+#
+# Most administrators will simply want to use the default, which is 
+# only /etc/passwd.
+#
+# Do not change this to point to a shadow password file (/etc/shadow, etc)
+# because NcFTPd will use them automatically in conjunction with /etc/passwd.
+#
+# See the documentation for the ncftpd_passwd utility program
+# (http://www.ncftp.com/ncftpd/doc/user_management/) for more
+# information on how to do this.
+#
+# Note: Password databases from NcFTPd 2.5.0's ncftpd_passwd are _not_
+# compatible with prior versions.  Use the "updatepwdb" utility to convert
+# old databases to the new format.
+#
+passwd=/u01/ncftpd/etc/passwd.db,/etc/passwd
+
+
+
+# When a restricted user (an FTP-only user, or a user in a member of
+# a restricted group) logs in, you have the option of presenting the
+# pathname as the full path as it is on your system (i.e. "/home/gleason"),
+# or rooted (i.e. "/").
+#
+# Set `u-vchroot-restricted-users' to `yes' if you want their home directory
+# to appear rooted, or `no' if you want the full pathname shown.  If this
+# domain is anonymous only, this option is ignored.
+#
+# NOTE:  Previous versions of NcFTPd had the equivalent default behavior
+# of `u-vchroot-restricted-users=no'.  You may want to use this to
+# maintain compatibility.
+#
+u-vchroot-restricted-users=yes
+
+
+
+# You can place a limit on the number of users allowed to login to this
+# domain, if you want to prevent one domain from monopolizing all of the
+# available users.  Leave this commented out if you don't care, or if
+# you aren't running more than one domain.
+#
+#max-domain-users=45
+
+
+
+# You can set a limit on throughput, which applies to each user in this
+# domain.  For example, if you want to limit downloaders to a maximum
+# throughput of 8 kilobytes per second each, you could set
+# `a-download-bandwidth-per-user' to `8' here.  Note that the value you
+# use here is given to each user, so if you decided on 8 kB/sec per user,
+# if you had 12 users logged on, they could each consume up to 8 kB/sec,
+# or 96 kB/sec total.
+#
+# A value of zero (or left commented-out) means no limit will be imposed.
+# Note that the "a-" options apply to anonymous users, but there are also
+# "u-" options which apply to non-anonymous users.  So if you want to
+# limit non-anonymous users, you would use "u-download-bandwidth-per-user"
+# instead.
+#
+#a-download-bandwidth-per-user=20
+#a-upload-bandwidth-per-user=0
+
+
+
+# Set the `log-xfer' variable to the specification for the name of
+# the transfer logs.  Any directories that don't exist will be
+# automatically created as needed.  If you like, you can use %
+# modifiers for use with strftime(3), so you can have the logs go
+# into different directories and filenames based on the time of day.
+#
+# Log names do not have to be unique for each domain, but the example
+# below puts the logs in different directories for each domain.
+#
+# Note that if you are using the NcFTPd Reporting Package, and you want
+# to be able to break up reports based upon the domain, you should use
+# different log names for each domain (use the @SETNAME@ token).
+#
+log-xfer=/var/log/ncftpd/xfer.%Y%m%d
+
+# another example: log-xfer=/var/log/ncftpd/%Y%m%d/@SETNAME@/xfer.%Y%m%d.%H
+
+
+
+# Set the `log-session' variable to the specification for the session logs.
+#
+# Log names do not have to be unique for each domain, but the example
+# below puts the logs in different directories for each domain.
+#
+# Note that if you are using the NcFTPd Reporting Package, and you want
+# to be able to break up reports based upon the domain, you should use
+# different log names for each domain (use the @SETNAME@ token).
+#
+log-session=/var/log/ncftpd/sess.%Y%m%d
+
+# another example: log-session=/var/log/ncftpd/%Y%m%d/@SETNAME@/sess.%Y%m%d.%H
+
+
+
+# Set the `a-login-message' variable to be the absolute pathname to a file
+# to print as the login message after anonymous users login.
+# You can comment it out if you don't want a login message.
+#
+#a-login-message=/u01/ncftpd/etc/ncftpd/a-login-message.txt
+
+
+
+# Set the `u-login-message' variable to be the absolute pathname to a file
+# to print as the login message after non-anonymous users login.
+# You can comment it out if you don't want a login message.
+#
+# Each individual domain can have it's own different login message for
+# anonymous users, but that is set in each domain configuration file.
+#
+#u-login-message=/u01/ncftpd/etc/ncftpd/u-login-message.txt
+
+
+
+# Set the `welcome-message' variable to be the absolute pathname to a file
+# to print as the greeting when users connect (but before they've logged
+# in, so we can't tell if they're anonymous or not).  You can comment it 
+# out if you don't want one; most often you won't want one, because you
+# will want to display a message after they login (which you would set
+# u-login-message and a-login-message for).
+#
+#welcome-message=/u01/ncftpd/etc/ncftpd/welcome-message.txt
+
+
+
+# end of first domain configuration set...
+
+# you could add more sets here, like:
+#set-name=ftp2.example.com
+#server-address=10.123.45.68
+#server-name=ftp2.example.com
+#server-type=anonymous-only
+#ftp-home=/var/ftp
+#passwd=/etc/passwd
+#u-vchroot-restricted-users=yes
+#log-xfer=/var/log/ncftpd/%y%m%d/@SETNAME@/xfer%H.%y%m%d
+#log-session=/var/log/ncftpd/%y%m%d/@SETNAME@/sess%H.%y%m%d
+#a-login-message=/var/ftp/etc/motd
+#u-login-message=/etc/motd
+#welcome-message=/var/ftp/etc/welcome
+#a-download-bandwidth-per-user=0
+#a-upload-bandwidth-per-user=0
+#u-download-bandwidth-per-user=0
+#u-upload-bandwidth-per-user=0
+
+#eof

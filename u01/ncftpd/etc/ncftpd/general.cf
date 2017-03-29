@@ -1,0 +1,356 @@
+#-------------------------------------------------------------------------
+# NcFTPd 2.8.7 general configuration file.
+# Blank lines and lines starting with a `#' character are ignored.
+#
+# This is one of two types of configuration files for use with NcFTPd.
+# Options that are configurable for each domain/virtual host are in 
+# configuration files specific to each domain, and not this file.
+#
+# Not ALL configuration options are listed here; consult the online
+# documentation at http://www.ncftp.com/ncftpd/doc/ for more.
+#
+# NOTE: If you change this file while NcFTPd is running, the changes
+# DO NOT TAKE EFFECT until you fully *RESTART* NcFTPd, which is usually
+# accomplished by running /usr/local/sbin/restart_ncftpd.  For details
+# on how to do that, see http://www.ncftp.com/ncftpd/doc/faq/admin.html.
+# 
+#-------------------------------------------------------------------------
+
+
+
+# Some people simply copy the template general.cf and domain.cf and start
+# up the server.  The following line is present so that those people will
+# get an error and realize that they actually need to do some configuration
+# before starting the server. So, delete the line and read on!
+#
+# (removed by install_ncftpd.pl)
+
+
+
+# The server can log each transfer.  If you want this, set the `log-xfers'
+# variable to `yes'.  The logs can fill up disk space in a hurry, so you
+# may want to turn this off or at least keep an eye on the logs.
+#
+# The name of the log is set in the domain configuration file, and can
+# be different for each domain.
+#
+log-xfers=yes
+
+
+
+# The server can log each session (one line summary of a user's activity).
+# If you want this, set the `log-sessions' variable to `yes'.
+#
+# The name of the log is set in the domain configuration file, and can
+# be different for each domain.
+#
+log-sessions=yes
+
+
+
+# Set the `log-misc' variable to the specification for the miscellaneous
+# logs.  These logs will have error messages or debugging information
+# in them.
+#
+# The name of this log is set here and is shared by all domains.
+#
+log-misc=/var/log/ncftpd/misc.%Y%m%d
+
+# another example: log-misc=/var/log/ncftpd/%Y%m%d/misc.%Y%m%d.%H
+
+
+
+# Set the `log-stat' variable to the specification for the stat logs.
+# These are near real-time reports that log a summary of each 15-minute
+# interval.
+#
+# These logs are only required if you want to use the NcFTPd Reporting
+# Package, so you can comment this out if you like.  Also, if your system
+# does not have shared-memory (BSD/OS 3.x, SunOS 4.x) these logs will not be
+# generated.
+#
+log-stat=/var/log/ncftpd/stat.%Y%m
+
+
+
+# You can configure the ownership, group, and permissions for log files
+# and log directories created.  If you plan on using the NcFTPd Reporting
+# Package, you should have the log files owned by the web server user.
+#
+#log-owner=www
+#log-group=www
+log-umask=007
+
+
+
+# Set the `max-users' variable to the maximum number of users
+# that can be logged on (to all domains) at a time.  (Note: the default
+# value as shown below is 50, but you can set this higher than 50
+# since the evaluation version does not limit you to 50.)
+#
+max-users=50
+
+
+
+# Set the `min-users' variable to be an estimate of the minimum number
+# of users you expect to be logged on.  This number corresponds to the
+# number of ncftpd child processes that persist.  When the server
+# has `min-users' or less child processes, the server doesn't need
+# to spawn a new child.  Sites with heavy volume should set the minimum
+# closer to the user limit for best performance.
+#
+# (Note:  since there are separate "master" and "logger" processes,
+# there will always be at least (min-users + 2) processes.)
+#
+min-users=5
+
+
+
+# The server logs the remote user's host address.  The default is to
+# leave the addresses represented as dotted-decimal (i.e. 129.93.33.1)
+# but if you want you can configure the server so that it looks those
+# addresses up to get a symbolic host name (i.e. cse.unl.edu).
+#
+# I recommend that you set the `dns-lookup' variable to `no' because
+# doing the lookups can cause significant performance degradation (and
+# you can always look up the ones you want later).  If you want to do it
+# anyway set the `dns-lookup' variable to `yes'.
+# 
+dns-lookup=no
+
+
+
+# A properly administrated anonymous FTP hierarchy will use the UNIX
+# file and directory permissions properly.  Unfortunately it is easy
+# to make a mistake which would leave your system vulnerable.  One case
+# is where there is a public-writeable directory in your FTP area.
+# Abusers can then upload bootleg software, pornographic material, etc.,
+# onto your machine.
+#
+# I recommend that you leave the `a-write-permission' variable set to
+# `no' for this reason.  This variable affects anonymous users only,
+# and prevents them from uploading, deleting, or creating directories,
+# no matter what the permissions on the file system are set to (except
+# to the `incoming' directory, described below).  If you know what
+# you're doing, you can set it to `yes' though.
+#
+a-write-permission=no
+
+
+
+# The exception to `a-write-permission' is the `incoming' directory.
+# This directory, if present, allows anonymous users to upload files
+# into it.  There is special handling code for this directory.  In
+# addition to upload ability, the server also prevents users from
+# downloading from it.  It also prevents existing files from being
+# overwritten.  The incoming directory serves as a drop-off-only point
+# for your site.
+#
+# You can use this directory and not have to worry about abusers uploading
+# stuff for downloading by other abusers.  The good thing about the
+# incoming directory, is that it works with the `a-write-permission' in
+# the fact that uploads aren't possible _except_ to the incoming directory,
+# no matter what the permissions are really set to on other directories.
+#
+# If you want an incoming directory tree, create a directory named
+# "incoming" anywhere in the anonymous FTP directory tree.
+# Because of the special treatment, it is okay to leave it as mode 777
+# (drwxrwxrwx) when used with NcFTPd.
+
+
+
+# One inconvenience in the FTP protocol is that it does not provide a
+# seamless way to download whole directory trees.  You can let users
+# download directories by enabling what is termed `on the fly tar/compress'.
+#
+# If a user wants to download the entire contents of a /pub/stuff directory,
+# the user can use his FTP client to say "get /pub/stuff.tar".  NcFTPd
+# looks for that special case, and when the user does that it sends a TAR
+# file of /pub/stuff down the data connection.
+#
+# This feature is off by default because it degrades performance of your
+# machine, especially if it is used a lot.  It also causes more network
+# bandwidth to be used because users can easily grab large amounts of data.
+#
+# To turn this on, you need to set the `tar' variable to the absolute path
+# of the tar program.
+#
+#tar=/bin/tar
+
+
+
+# To accompany the on-the-fly TAR, you can also let them have the TAR file
+# compressed or gzipped (i.e. get /pub/stuff.tar.Z).
+#
+# Again, I don't recommend turning this on unless your users' usage pattern
+# suggests they need to download directories.  Compress and Gzip worsen
+# the problem because they use large amounts of memory while they run.
+# On a busy server, one person doing a get tar.Z could slow everyone else
+# down.
+#
+# You can let them use gzip by setting `gzip' to the absolute pathname of it.
+# Similarly, you can let them compress by setting `compress'.
+#
+#compress=/usr/bin/compress
+#gzip=/bin/gzip
+
+
+
+
+# You can control which client hosts contact your server by using
+# TCP Wrappers' access control files.  Consult the documentation
+# that comes with TCP Wrappers (ftp://ftp.win.tue.nl/pub/security/)
+# for information on how to configure the access controls.
+#
+# Restrictions:
+#   The configuration files must be named /etc/hosts.allow
+#   and/or /etc/hosts.deny;
+#
+#   The "twist" option is not supported;
+#
+#   Service specific access for NcFTPd can be controlled by
+#   the "NcFTPd:" service name.
+#
+# Please note that the author of TCP Wrappers (Wietse Venema) is
+# not responsible for NcFTPd's implementation -- if you have
+# problems with NcFTPd but your other services work fine with
+# your TCP Wrappers please contact us first (http://www.ncftp.com/contact/).
+#
+# Also note that turning this feature on invokes a substantial
+# performance penalty.  If you're running an anonymous-only site
+# you probably don't want to turn anyone away anyway.
+#
+# Using this option also implicitly enables "dns-lookups=yes", since
+# TCP Wrappers uses DNS.
+#
+tcp-wrappers=no
+
+
+
+#-------------------------------------------------------------------------
+# Note:  Things in this section probably do not need to be configured,
+# so if you're in a hurry you can stop here and trust the defaults.
+# These are things whose defaults are good enough, but some people
+# may want to tune anyway.
+#-------------------------------------------------------------------------
+
+
+# When a remote user connects, there is a timer that controls how long
+# they have to login succesfully (from the time of the connection) or
+# be disconnected.
+#
+login-timeout=150
+
+
+
+# After a period of inactivity, a remote user is logged off automatically.
+# The timer (in seconds) is configurable by setting `idle-timeout' here.
+#
+idle-timeout=300
+
+
+
+# NcFTPd considers a data transfer timed-out and aborts the session after
+# this period (in seconds) of no data received.
+#
+xfer-timeout=3600
+
+
+
+# When establishing a passive data connection from a remote client, or
+# accepting an active data connection to a remote client, the server waits
+# this period (in seconds) before giving up.
+#
+#conn-timeout=15
+
+
+
+# The server needs to write the PIDs of its processes into a run
+# file.  This can also be useful if you want to kill all the processes, which
+# you can do by sending the main process a SIGTERM (and it will terminate
+# the child processes for you).
+#
+# This file is actually a shell script, which when run, kills all the
+# processes.
+#
+pid-file=/var/run/ncftpd.pid.sh
+
+
+
+# The built-in /bin/ls can be configured whether to display user and group
+# names for the long-listing format.  The default setting is to not
+# print those for anonymous users.  Not only is it faster, since it
+# doesn't need to waste time looking them up, it is more secure for you
+# since you don't want to give the world a list of valid usernames for
+# your system.
+#
+# Set the `a-ls-names' variable to `yes' if you want to display names
+# for anonymous users.  Set the `u-ls-names' variable likewise, for
+# the non-anonymous users.
+#
+a-ls-names=no
+u-ls-names=yes
+
+
+
+# You may want to prevent inconsiderate users from FTPing multiple
+# times to the server simultaneously.  By setting ``max-users-per-ip''
+# a number greater than 0, you can limit how many different FTP
+# sessions a user can have at the same time.
+#
+# This feature is only available on platforms with shared-memory,
+# i.e. everyone but SunOS 4.x and BSD/OS 3.x.
+#
+# The default is zero, which means no limit.  The reason for this is
+# that firewalls and proxies on the client side serving multiple
+# clients appear to be from the same IP address.  Therefore, it is
+# possible for two users from the same remote site could get counted
+# as the same user, which may not be desirable.
+#
+# Also note that some FTP clients always try to use more than one
+# session as a "feature", and if you set this limit too low you may
+# run into problems where these FTP client programs break because they
+# expect that functionality to work.
+#
+#max-users-per-ip=3
+
+
+
+# Set the `port' variable to the port number for the FTP control
+# connection for the anonymous server.  Most of the time you will want
+# to set this to `21' which is the default FTP port that remote clients
+# will try to connect to.
+#
+port=21
+
+# The server automatically changes turns on the execute bit for files uploaded
+# by non-anonymous users that appear executable.
+#
+# This shouldn't be a concern because it only affects the file mode, which
+# the user could do anyway with SITE CHMOD.  The user of course cannot execute
+# the program uploaded from within FTP.
+#
+u-auto-chmod-uploads=yes
+
+# First, specify the name of the file which lists the users that should
+# not log in via FTP by setting the `u-deny-users-file' variable.  Try to
+# use the /etc/ftpusers file for this if you can.
+#
+# Note: This file is only read once at startup, so if you change the
+# contents of it you need to restart NcFTPd.
+#
+u-deny-users-file=/etc/ftpusers
+
+
+# Next, specify the name of the file which lists the valid shells.
+# Try to use /etc/shells for this if you can.
+#
+# Note: This file is only read once at startup, so if you change the
+# contents of it you need to restart NcFTPd.
+#
+u-valid-user-shell-file=/etc/shells
+
+allowed-site-commands=symlink,umask,utime,retrbufsize,storbufsize
+
+
+#eof

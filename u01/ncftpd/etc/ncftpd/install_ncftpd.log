@@ -1,0 +1,112 @@
++++ Log created at 2017-03-27 21:08:59 +0530 +++
+21:08:59 host = dev-r73.linux-library.com
+21:08:59 os = linux
+21:08:59 os_v = 1
+21:08:59 os_r = 3.10.0
+21:08:59 arch = x86_64
+21:08:59 archp = x86_64
+21:08:59 /root/install_ncftpd.pl.7199.495
+21:08:59 created /root/install_ncftpd.pl.7199.495.c
+21:08:59 compiled /root/install_ncftpd.pl.7199.495.c to /root/install_ncftpd.pl.7199.495
+21:08:59 cc_libc = glibc2.17
+21:08:59 ldd_libc = glibc2.17
+21:08:59 f_libc found glibc2.17.
+21:08:59 f_libc found glibc2.17.
+21:08:59 f_libc best was glibc2.17.
+21:08:59 Found linux_libc = "glibc2.17" detected via CC
+21:08:59 Linux Distribution: Red Hat (Version 7.3)
+21:08:59 Linux LIBC Version: glibc2.17
+21:08:59 OS = linux-x86_64 ; SYS = linux
+21:08:59 Original command line: ./install_ncftpd.pl --prefix=/u01/ncftpd
+21:08:59 List of platform subdirectories that will not be used as they appear to be aimed at newer systems than this one:
+  glibc2.23
+21:08:59 List of platform subdirectories found that will be checked:
+  glibc2.17
+  glibc2.12
+  glibc2.5
+21:08:59 Try to run "/u01/cust-packs/ncftpd-2.8.7/glibc2.17/ncftpd -b".
+  result = [NcFTPd 2.8.7/847 Feb 07 2013 for linux-x86_64]
+21:08:59 Install source root is /u01/cust-packs/ncftpd-2.8.7/glibc2.17.
+21:08:59 Setting PATH to "/u01/cust-packs/ncftpd-2.8.7/glibc2.17/extra:/u01/cust-packs/ncftpd-2.8.7/glibc2.17:/u01/cust-packs/ncftpd-2.8.7:/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/sbin:/etc:/usr/local/bin".
+Starting installation of NcFTPd Server.
+21:08:59 /u01/ncftpd kbytes free: 9774776.00
+21:08:59 /u01/cust-packs/ncftpd-2.8.7/glibc2.17 kbytes usage: 896.00
+21:08:59 Will try to use systemd for automatic startup.
+enabled
+21:09:00 RunProgram (/bin/systemctl is-enabled vsftpd.service) OK.
+Disabling vsftpd.service in systemd.
+21:09:00 RunProgram (/bin/systemctl --quiet disable vsftpd.service) OK.
+Checking if "/sbin/lsof" works. This may require up to 30 seconds.
+21:09:00 Test run of /sbin/lsof succeeded.
+Something else (vsftpd) is currently handling FTP.
+
+I will try killing these processes and continuing the installation,
+but you may need to disable the other software's startup script. Otherwise,
+the next time you reboot the machine NcFTPd will not be able to start.
+
+21:09:00 RunProgram (/bin/systemctl --quiet is-active vsftpd.service) OK.
+Stopping vsftpd.service via systemd.
+21:09:00 RunProgram (/bin/systemctl stop vsftpd.service) OK.
+21:09:00 RunProgram (/bin/systemctl --quiet is-active ncftpd.service) failed (es=3).
+21:09:00 Checking system user database for /etc/ftpusers suggestions.
+
+Warning: your /etc/ftpusers file may be missing entries.
+The /etc/ftpusers file is a list of users who should NOT
+be allowed to login by FTP.  The following users were found
+on your system, and are NOT in /etc/ftpusers.  Please review
+the list below, and if one or more of the users below should
+not be logging in by FTP, add them to /etc/ftpusers using
+21:09:00 Using group ftp (GID 50)
+21:09:00 Using user ftp (UID 14)
+a text editor (such as vi).
+
+    gdm         ntp         postfix     
+
+21:09:00 Using /var/ftp for ftp-home
+No FTP server is running.
+/etc/xinetd.d does not appear to be handling the "ftp" service.
+21:09:00 Did not find NcFTPd or ftpd entries in the /etc/inittab.
+NcFTPd is not currently running.
+21:09:01 No FTP server is running.
+21:09:01 Checking system user database for a web server username.
+Installing configuration files.
+Installing new NcFTPd config files.
+  set general.cf: #log-owner=www
+  set general.cf: #log-group=www
+Created /u01/ncftpd/etc/ncftpd/general.cf.
+Looking up IP address and hostname for this machine.
+21:09:01 Running "/u01/cust-packs/ncftpd-2.8.7/glibc2.17/ncftpd -e".
+  result = [dev-r73.linux-library.com]
+  ipaddr = [192.168.1.110]
+  set domain.cf: set-name=dev-r73.linux-library.com
+  set domain.cf: server-address=192.168.1.110
+  set domain.cf: #server-name=dev-r73.linux-library.com
+  set domain.cf: #ftp-home=/var/ftp
+  set domain.cf: #a-login-message=/u01/ncftpd/etc/ncftpd/a-login-message.txt
+  set domain.cf: #u-login-message=/u01/ncftpd/etc/ncftpd/u-login-message.txt
+  set domain.cf: #welcome-message=/u01/ncftpd/etc/ncftpd/welcome-message.txt
+  set domain.cf: #ftp-home=/var/ftp
+  set domain.cf: #a-login-message=/var/ftp/etc/motd
+  set domain.cf: #welcome-message=/var/ftp/etc/welcome
+Created /u01/ncftpd/etc/ncftpd/domain.cf.
+Installing programs.
+21:09:01 Installed /u01/ncftpd/sbin/ncftpd.
+21:09:01 Installed /u01/ncftpd/sbin/ncftpd_spy.
+21:09:01 Installed /u01/ncftpd/sbin/ncftpd_passwd.
+21:09:01 Installed /u01/ncftpd/sbin/ncftpd_edquota.
+21:09:01 Installed /u01/ncftpd/sbin/ncftpd_repquota.
+21:09:01 Installed /u01/ncftpd/sbin/ncftpd_ping.
+21:09:01 Installed /u01/ncftpd/bin/pgrep.pl.
+  Linked /u01/ncftpd/bin/pgrep.pl -> /u01/ncftpd/bin/pkill.pl.
+21:09:01 Installed /u01/ncftpd/etc/ncftpd/uninstall_ncftpd.pl.
+Configuring your system so NcFTPd starts automatically at system boot.
+21:09:01 Installed /etc/rc.d/init.d/ncftpd.
+  Linked /etc/rc.d/init.d/ncftpd -> /u01/ncftpd/sbin/restart_ncftpd.
+  Linked /etc/rc.d/init.d/ncftpd -> /u01/ncftpd/sbin/stop_ncftpd.
+21:09:01 Installed /lib/systemd/system/ncftpd.service.
+21:09:01 RunProgram (/bin/systemctl daemon-reload) OK.
+21:09:01 RunProgram (/bin/systemctl --quiet enable ncftpd.service) OK.
+Starting NcFTPd.
+21:09:01 RunProgram (/bin/systemctl start ncftpd.service) OK.
+Checking if the FTP service has started.
+21:09:04 An FTP server is running.
