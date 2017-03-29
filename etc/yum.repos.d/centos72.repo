@@ -1,0 +1,5 @@
+[centos72]
+name=CentOS 7.2 Repository
+baseurl=file:///u01/centos72/Packages/
+enabled=1
+gpgcheck=0
