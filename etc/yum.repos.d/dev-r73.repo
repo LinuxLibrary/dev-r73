@@ -1,0 +1,5 @@
+[dev-r73]
+name=Dev RedHat 7.3 Repository
+baseurl=file:///u01/rhel73/Packages/
+enabled=1
+gpgcheck=0
